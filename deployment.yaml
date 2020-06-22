@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "2"
+  labels:
+    app: nodeapp
+  name: nodeapp
+  namespace: shrutitest
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: nodeapp
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nodeapp
+    spec:
+      containers:
+      - image: shrutibagwe/nodejs:test1
+        imagePullPolicy: Always
+        name: nodejs
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      priorityClassName: pod-high-priority
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: my-hub
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
